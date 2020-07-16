@@ -78,4 +78,40 @@ class UserController extends Controller
             echo "<script>alert('注册失败',localtion='/user/reg')</script>";
         }
     }
+
+    /**
+     * 登陆视图
+     */
+    public function login()
+    {
+        return view('user.login');
+    }
+
+    /**
+     * 执行登陆
+     */
+    public function loginDo(Request $request)
+    {
+        $u = $request->input('u');
+        $pwd = $request->input('pwd');
+        $res = UserModel::where(['user_name'=>$u])->orWhere(['email'=>$u])->orWhere(['tel'=>$u])->first();
+        if($res == NULL){
+            echo "<script>alert('用户不存在,请先注册用户!');location='/user/reg'</script>";
+        }
+
+        if(!password_verify($pwd,$res->pwd)){
+            echo "<script>alert('密码不正确,请重新输入...');window.history.go(-1);</script>";
+            die;
+        }
+
+        echo "<script>alert('登陆成功,正在跳转至个人中心');location='/user/center'</script>";
+    }
+
+    /**
+     * 个人中心
+     */
+    public function center()
+    {
+        return view('user.center');
+    }
 }
