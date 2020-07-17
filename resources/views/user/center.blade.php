@@ -6,6 +6,6 @@
     <title>个人中心</title>
 </head>
 <body>
-    <h1>个人中心</h1>
+    <h3>欢迎<span style="color:red">{{$data['user_name']}}</span>来到个人中心</h3>
 </body>
 </html>

@@ -99,19 +99,31 @@ class UserController extends Controller
             echo "<script>alert('用户不存在,请先注册用户!');location='/user/reg'</script>";
         }
 
-        if(!password_verify($pwd,$res->pwd)){
+        if(password_verify($pwd,$res->pwd)){
+            session(['uid' => $res->uid]);
+            echo "<script>alert('登陆成功,正在跳转至个人中心');location='/user/center'</script>";
+        }else{
             echo "<script>alert('密码不正确,请重新输入...');window.history.go(-1);</script>";
-            die;
         }
 
-        echo "<script>alert('登陆成功,正在跳转至个人中心');location='/user/center'</script>";
     }
 
     /**
      * 个人中心
      */
-    public function center()
+    public function center(Request $request)
     {
-        return view('user.center');
+        // $data = $request->session()->all();
+        // print_r($data);
+        $res = UserModel::where(['uid'=>session('uid')])->first();
+
+        if(session()->has('uid')){
+            return view('user.center',['data'=>$res]);
+        }else{
+            echo "<script>alert('请先登录');location='/user/login'</script>";
+        }
     }
 }
+
+
+
